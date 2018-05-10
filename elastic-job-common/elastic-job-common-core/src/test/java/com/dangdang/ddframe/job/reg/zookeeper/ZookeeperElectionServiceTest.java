@@ -32,7 +32,6 @@ public class ZookeeperElectionServiceTest {
     }
     
     @Test
-    @Ignore
     public void assertContend() throws Exception {
         CuratorFramework client = CuratorFrameworkFactory.newClient(EmbedTestingServer.getConnectionString(), new RetryOneTime(2000));
         client.start();
