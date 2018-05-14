@@ -29,6 +29,8 @@ import com.dangdang.ddframe.job.lite.internal.server.ServerService;
 import com.dangdang.ddframe.job.lite.internal.sharding.ExecutionService;
 import com.dangdang.ddframe.job.lite.internal.sharding.ShardingService;
 import com.dangdang.ddframe.job.reg.base.CoordinatorRegistryCenter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -38,6 +40,8 @@ import java.util.List;
  * @author zhangliang
  */
 public final class SchedulerFacade {
+
+    private Logger logger= LoggerFactory.getLogger(SchedulerFacade.class);
     
     private final String jobName;
     
@@ -73,14 +77,25 @@ public final class SchedulerFacade {
     
     public SchedulerFacade(final CoordinatorRegistryCenter regCenter, final String jobName, final List<ElasticJobListener> elasticJobListeners) {
         this.jobName = jobName;
+        logger.debug("schedule facade job name {}",jobName);
+
+        logger.debug("new config service{}",jobName);
         configService = new ConfigurationService(regCenter, jobName);
+        logger.debug("leader service{}",jobName);
         leaderService = new LeaderService(regCenter, jobName);
+        logger.debug("server service{}",jobName);
         serverService = new ServerService(regCenter, jobName);
+        logger.debug("instance service{}",jobName);
         instanceService = new InstanceService(regCenter, jobName);
+        logger.debug("sharding service{}",jobName);
         shardingService = new ShardingService(regCenter, jobName);
+        logger.debug("execution service{}",jobName);
         executionService = new ExecutionService(regCenter, jobName);
+        logger.debug("monitor service{}",jobName);
         monitorService = new MonitorService(regCenter, jobName);
+        logger.debug("reconcile [调度] service{}",jobName);
         reconcileService = new ReconcileService(regCenter, jobName);
+        logger.debug("listener manager{}",jobName);
         listenerManager = new ListenerManager(regCenter, jobName, elasticJobListeners);
     }
     
@@ -110,7 +125,9 @@ public final class SchedulerFacade {
      * @param enabled 作业是否启用
      */
     public void registerStartUpInfo(final boolean enabled) {
+        logger.debug("register job start info and elect leader");
         listenerManager.startAllListeners();
+        logger.debug("start elect leader {}",this.jobName);
         leaderService.electLeader();
         serverService.persistOnline(enabled);
         instanceService.persistOnline();

@@ -66,8 +66,8 @@ public final class JavaMain {
         CoordinatorRegistryCenter regCenter = setUpRegistryCenter();
         JobEventConfiguration jobEventConfig = new JobEventRdbConfiguration(setUpEventTraceDataSource());
         setUpSimpleJob(regCenter, jobEventConfig);
-        setUpDataflowJob(regCenter, jobEventConfig);
-        setUpScriptJob(regCenter, jobEventConfig);
+        //setUpDataflowJob(regCenter, jobEventConfig);
+        //setUpScriptJob(regCenter, jobEventConfig);
     }
     
     private static CoordinatorRegistryCenter setUpRegistryCenter() {

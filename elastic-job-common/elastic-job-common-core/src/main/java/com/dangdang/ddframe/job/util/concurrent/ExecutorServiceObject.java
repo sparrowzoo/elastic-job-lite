@@ -20,6 +20,8 @@ package com.dangdang.ddframe.job.util.concurrent;
 import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -33,12 +35,15 @@ import java.util.concurrent.TimeUnit;
  * @author zhangliang
  */
 public final class ExecutorServiceObject {
-    
+
+    private static Logger logger= LoggerFactory.getLogger(ExecutorServiceObject.class);
+
     private final ThreadPoolExecutor threadPoolExecutor;
     
     private final BlockingQueue<Runnable> workQueue;
     
     public ExecutorServiceObject(final String namingPattern, final int threadSize) {
+        logger.debug("thread pool {}",namingPattern);
         workQueue = new LinkedBlockingQueue<>();
         threadPoolExecutor = new ThreadPoolExecutor(threadSize, threadSize, 5L, TimeUnit.MINUTES, workQueue, 
                 new BasicThreadFactory.Builder().namingPattern(Joiner.on("-").join(namingPattern, "%s")).build());

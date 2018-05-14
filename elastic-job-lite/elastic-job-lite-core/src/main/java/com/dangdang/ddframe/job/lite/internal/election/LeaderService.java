@@ -50,7 +50,7 @@ public final class LeaderService {
      * 选举主节点.
      */
     public void electLeader() {
-        log.debug("Elect a new leader now.");
+        log.debug("Elect a new leader now. {}",Thread.currentThread().getName());
         jobNodeStorage.executeInLeader(LeaderNode.LATCH, new LeaderElectionExecutionCallback());
         log.debug("Leader election completed.");
     }

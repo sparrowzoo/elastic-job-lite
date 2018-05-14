@@ -21,6 +21,8 @@ import com.dangdang.ddframe.job.util.concurrent.ExecutorServiceObject;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 运行痕迹事件总线.
@@ -30,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public final class JobEventBus {
+    private static Logger logger= LoggerFactory.getLogger(JobEventBus.class);
     
     private final JobEventConfiguration jobEventConfig;
     
@@ -48,6 +51,7 @@ public final class JobEventBus {
     public JobEventBus(final JobEventConfiguration jobEventConfig) {
         this.jobEventConfig = jobEventConfig;
         executorServiceObject = new ExecutorServiceObject("job-event", Runtime.getRuntime().availableProcessors() * 2);
+        logger.debug("init guava event bus");
         eventBus = new AsyncEventBus(executorServiceObject.createExecutorService());
         register();
     }
