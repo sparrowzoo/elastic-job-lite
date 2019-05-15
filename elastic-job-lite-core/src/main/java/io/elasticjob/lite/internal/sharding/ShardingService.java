@@ -104,15 +104,19 @@ public final class ShardingService {
         if (!isNeedSharding() || availableJobInstances.isEmpty()) {
             return;
         }
+        //@harry 如果是临时网络抖动导致，则每次会重新判断是否为leader
         if (!leaderService.isLeaderUntilBlock()) {
+            //分片确认已经结束
             blockUntilShardingCompleted();
             return;
         }
+        //等待所有任务节点结束
         waitingOtherShardingItemCompleted();
         LiteJobConfiguration liteJobConfig = configService.load(false);
         int shardingTotalCount = liteJobConfig.getTypeConfig().getCoreConfig().getShardingTotalCount();
         log.debug("Job '{}' sharding begin.", jobName);
         jobNodeStorage.fillEphemeralJobNode(ShardingNode.PROCESSING, "");
+        //Thread.sleep(50000L);
         resetShardingInfo(shardingTotalCount);
         JobShardingStrategy jobShardingStrategy = JobShardingStrategyFactory.getStrategy(liteJobConfig.getJobShardingStrategyClass());
         jobNodeStorage.executeInTransaction(new PersistShardingInfoTransactionExecutionCallback(jobShardingStrategy.sharding(availableJobInstances, jobName, shardingTotalCount)));

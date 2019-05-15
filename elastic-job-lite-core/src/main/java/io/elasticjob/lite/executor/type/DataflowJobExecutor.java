@@ -51,6 +51,7 @@ public final class DataflowJobExecutor extends AbstractElasticJobExecutor {
     
     private void streamingExecute(final ShardingContext shardingContext) {
         List<Object> data = fetchData(shardingContext);
+        //无限循环
         while (null != data && !data.isEmpty()) {
             processData(shardingContext, data);
             if (!getJobFacade().isEligibleForJobRunning()) {
